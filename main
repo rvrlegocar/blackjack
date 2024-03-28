@@ -1,0 +1,146 @@
+-- Place this script in a part that represents the seat
+
+local seats = {
+	script.Parent.Chair1.Seat,
+	script.Parent.Chair2.Seat,
+	script.Parent.Chair3.Seat,
+	script.Parent.Chair4.Seat,
+	script.Parent.Chair5.Seat
+}
+
+local debounce = {}
+local timerActive = false
+local timerDelay = 5 -- 5 seconds
+local timerEndTime = 0
+
+-- Find the TextLabel object in your game and assign it to the 'timerLabel' variable
+local timerLabel = script.Parent.starttimer.BillboardGui.TextLabel
+local Debris = game:GetService("Debris")
+local partToClone = game.Workspace.Part
+
+-- Function to check if a seat is occupied by a player
+local function checkSeat(seatIndex)
+	local seat = seats[seatIndex]
+	if seat.Occupant ~= nil and not debounce[seatIndex] then
+		debounce[seatIndex] = true
+		print("Player is in seat ".. seatIndex .. "!")
+		-- You can add your desired actions here when a player is in the seat
+
+		-- Start the timer if it's not already active
+		if not timerActive then
+			timerActive = true
+			timerEndTime = tick() + timerDelay
+			print("Timer started!")
+		end
+	elseif seat.Occupant == nil and debounce[seatIndex] then
+		debounce[seatIndex] = false
+		print("Player has left seat ".. seatIndex .. "!")
+
+		-- Stop the timer if all seats are empty
+		local allSeatsEmpty = true
+		for i = 1, #seats do
+			if seats[i].Occupant ~= nil then
+				allSeatsEmpty = false
+				break
+			end
+		end
+
+		if allSeatsEmpty then
+			timerActive = false
+			print("Timer stopped!")
+			-- Reset the timer label text when the timer stops
+			timerLabel.Text = ""
+		end
+	end
+end
+
+-- Check seat occupancy for each seat every frame
+game:GetService("RunService").Heartbeat:Connect(function()
+	for i = 1, #seats do
+		checkSeat(i)
+	end
+
+	-- Check the timer if it's active
+	if timerActive then
+		local remainingTime = timerEndTime - tick()
+		if remainingTime <= 0 then
+			remainingTime = 0
+		end
+
+		-- Update the timer label text with the remaining time
+		timerLabel.Text = string.format("Starting in: %.1f", remainingTime)
+
+		-- Check if the timer has expired
+		if remainingTime <= 0 then
+			print("Timer expired!")
+			-- Add your desired actions when the timer expires here
+			timerActive = false
+			-- Reset the timer label text when the timer expires
+			timerLabel.Text = ""
+			
+			local Players = game:GetService("Players")
+
+			for i, seat in ipairs(seats) do
+				if seat.Occupant ~= nil then
+					local player = Players:GetPlayerFromCharacter(seat.Occupant.Parent)
+					if player then
+						-- Clone the part into the player's character
+						local partClone = game.Workspace.PartToClone:Clone()
+						partClone.Parent = player.PlayerGui
+						Debris:AddItem(partClone, 10)
+						
+						local remoteEvent = Instance.new("RemoteEvent")
+						remoteEvent.Name = "TextUpdateEvent"
+						remoteEvent.Parent = game.ReplicatedStorage
+						
+						wait(10)
+
+						remoteEvent.OnServerEvent:Connect(function(player, newText)
+							-- Process the newText received from the client
+							-- You can perform any server-side logic or data handling here
+							print("Received new text from", player.Name, ":", newText)
+							
+							local leaderstats = player:FindFirstChild("leaderstats")
+							if leaderstats then
+								local money = leaderstats:FindFirstChild("Money")
+								if money then
+									print(player.Name .. " has " .. money.Value .. " money.")
+									local newTextNumber = tonumber(newText)
+									if newTextNumber then
+										local moneyleft = money.Value - newTextNumber
+										if money.Value < newTextNumber then
+											print("Not enough money server")
+										else
+											print(moneyleft)
+											money.Value = moneyleft
+											
+											local head = player.Character:FindFirstChild("Head")
+											if head then
+												local headPos = head.Position
+												local lookVector = head.CFrame.LookVector
+												local newPos = headPos + (lookVector * 4)
+
+												print("New position: ", newPos)
+												
+												local clonedPart = partToClone:Clone()
+
+												-- Set the position of the cloned part to newPos
+												clonedPart.Position = newPos
+
+												-- Change the TextLabel's text to newTextNumber
+												clonedPart.BillboardGui.TextLabel.Text = "$" .. newTextNumber
+
+												-- Parent the cloned part to the Workspace (or wherever you want it to be)
+												clonedPart.Parent = game.Workspace
+											end
+										end
+									end
+								end
+							end
+						end)
+					end
+				end
+			end
+		end
+	end
+end)
