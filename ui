@@ -1,0 +1,29 @@
+local textBox = script.Parent -- path to textbox
+local textLabel = script.Parent.Parent.TextLabel -- path to textlabel
+
+local previousText = textBox.Text
+
+local remoteEvent = game.ReplicatedStorage:WaitForChild("TextUpdateEvent") -- name of RemoteEvent
+
+while true do
+	wait(0.1) -- wait time
+
+	if textBox.Text ~= previousText then
+		previousText = textBox.Text
+		print("The text has changed to: " .. textBox.Text)
+
+		-- player money
+		local player = game.Players.LocalPlayer
+		local money = player.leaderstats.Money.Value -- money currency
+
+		-- player have enoght money
+		local textBoxValue = tonumber(textBox.Text)
+		if textBoxValue and money < textBoxValue then
+			textLabel.Text = "Not enough money"
+		else
+			textLabel.Text = "New Text: " .. textBox.Text
+		end
+
+		print("The player's money is: " .. money)
+	end
+end
