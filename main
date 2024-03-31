@@ -11,6 +11,11 @@ local timerActive = false
 local timerDelay = 5 -- 5 seconds
 local timerEndTime = 0
 local runonce = false
+local cardvaluetotal1 = 0
+local cardvaluetotal2 = 0
+local cardvaluetotal3 = 0
+local cardvaluetotal4 = 0
+local cardvaluetotal5 = 0
 
 local timerLabel = script.Parent.starttimer.BillboardGui.TextLabel
 local Debris = game:GetService("Debris")
@@ -24,6 +29,25 @@ local Part20 = game.Workspace.chips["$20"]
 local Part10 = game.Workspace.chips["$10"]
 local Part5 = game.Workspace.chips["$5"]
 local Part1 = game.Workspace.chips["$1"]
+
+local function getSeatByPlayerName(playerName)
+	local players = game:GetService("Players"):GetPlayers()
+	for _, player in ipairs(players) do
+		if player.Name == playerName then
+			local character = player.Character
+			if character then
+				local humanoid = character:FindFirstChildOfClass("Humanoid")
+				if humanoid then
+					local seatPart = humanoid.SeatPart
+					if seatPart and seatPart:IsA("Seat") then
+						return seatPart
+					end
+				end
+			end
+		end
+	end
+	return nil
+end
 
 -- Create a table to keep track of cloned parts
 local clonedParts = {}
@@ -268,7 +292,6 @@ game:GetService("RunService").Heartbeat:Connect(function()
 												if runonce == false then
 													runonce = true
 													if script.Parent.Chair1.Seat.Occupant then
-														local cardvaluetotal = 0
 														local cardplacementpos1 = script.Parent["Card Placement1"].Position + Vector3.new(0, 0, 0)
 														local cardplacementrot1 = script.Parent["Card Placement1"].Orientation + Vector3.new(0, 0, -90)
 														print(tostring(cardplacementpos1))
@@ -276,12 +299,11 @@ game:GetService("RunService").Heartbeat:Connect(function()
 														local value, seat = clonePartOnce(game.workspace.Model, cardplacementpos1, cardplacementrot1, 1)
 														local cardvalue1 = script.Parent["Card Placement1"].card1value1
 														cardvalue1.Value = 0 + value
-														cardvaluetotal = cardvalue1.Value
-														print(seat, cardvaluetotal)
+														cardvaluetotal1 = cardvalue1.Value
+														print(seat, cardvaluetotal1)
 														wait(1)
 													end
 													if script.Parent.Chair2.Seat.Occupant then
-														local cardvaluetotal = 0
 														local cardplacementpos2 = script.Parent["Card Placement2"].Position + Vector3.new(0, 0, 0)
 														local cardplacementrot2 = script.Parent["Card Placement2"].Orientation + Vector3.new(0, 0, -90)
 														print(tostring(cardplacementpos2))
@@ -289,12 +311,11 @@ game:GetService("RunService").Heartbeat:Connect(function()
 														local value, seat = clonePartOnce(game.workspace.Model, cardplacementpos2, cardplacementrot2, 2)
 														local cardvalue2 = script.Parent["Card Placement2"].card2value1
 														cardvalue2.Value = 0 + value
-														cardvaluetotal = cardvalue2.Value
-														print(seat, cardvaluetotal)
+														cardvaluetotal2 = cardvalue2.Value
+														print(seat, cardvaluetotal2)
 														wait(1)
 													end
 													if script.Parent.Chair3.Seat.Occupant then
-														local cardvaluetotal = 0
 														local cardplacementpos3 = script.Parent["Card Placement3"].Position + Vector3.new(0, 0, 0)
 														local cardplacementrot3 = script.Parent["Card Placement3"].Orientation + Vector3.new(0, 0, -90)
 														print(tostring(cardplacementpos3))
@@ -302,12 +323,11 @@ game:GetService("RunService").Heartbeat:Connect(function()
 														local value, seat = clonePartOnce(game.workspace.Model, cardplacementpos3, cardplacementrot3, 3)
 														local cardvalue3 = script.Parent["Card Placement3"].card3value1
 														cardvalue3.Value = 0 + value
-														cardvaluetotal = cardvalue3.Value
-														print(seat, cardvaluetotal)
+														cardvaluetotal3 = cardvalue3.Value
+														print(seat, cardvaluetotal3)
 														wait(1)
 													end
 													if script.Parent.Chair4.Seat.Occupant then
-														local cardvaluetotal = 0
 														local cardplacementpos4 = script.Parent["Card Placement4"].Position + Vector3.new(0, 0, 0)
 														local cardplacementrot4 = script.Parent["Card Placement4"].Orientation + Vector3.new(0, 0, -90)
 														print(tostring(cardplacementpos4))
@@ -315,12 +335,11 @@ game:GetService("RunService").Heartbeat:Connect(function()
 														local value, seat = clonePartOnce(game.workspace.Model, cardplacementpos4, cardplacementrot4, 4)
 														local cardvalue4 = script.Parent["Card Placement4"].card4value1
 														cardvalue4.Value = 0 + value
-														cardvaluetotal = cardvalue4.Value
-														print(seat, cardvaluetotal)
+														cardvaluetotal4 = cardvalue4.Value
+														print(seat, cardvaluetotal4)
 														wait(1)
 													end
 													if script.Parent.Chair5.Seat.Occupant then
-														local cardvaluetotal = 0
 														local cardplacementpos5 = script.Parent["Card Placement5"].Position + Vector3.new(0, 0, 0)
 														local cardplacementrot5 = script.Parent["Card Placement5"].Orientation + Vector3.new(0, 0, -90)
 														print(tostring(cardplacementpos5))
@@ -328,18 +347,17 @@ game:GetService("RunService").Heartbeat:Connect(function()
 														local value, seat = clonePartOnce(game.workspace.Model, cardplacementpos5, cardplacementrot5, 5)
 														local cardvalue5 = script.Parent["Card Placement5"].card5value1
 														cardvalue5.Value = 0 + value
-														cardvaluetotal = cardvalue5.Value
-														print(seat, cardvaluetotal)
+														cardvaluetotal5 = cardvalue5.Value
+														print(seat, cardvaluetotal5)
 														wait(1)
 													end
 													
-													local dealercardplacementpos = script.Parent.dealercardplacementpos.Position
+													local dealercardplacementpos = script.Parent.dealercardplacementpos.Position + Vector3.new(0, 0, 0)
 													local dealercardplacementrot = script.Parent.dealercardplacementpos.Orientation + Vector3.new(0, 90, -90)
 													clonePartOnce(game.Workspace.Model, dealercardplacementpos, dealercardplacementrot)
 													wait(1)
 													
 													if script.Parent.Chair1.Seat.Occupant then
-														local cardvaluetotal = 0
 														local Card2pos = script.Parent["Card Placement1"]
 														local Card2rot = script.Parent["Card Placement1"].Orientation + Vector3.new(0, 0, -90)
 														local lookVector = Card2pos.CFrame.LookVector
@@ -350,97 +368,93 @@ game:GetService("RunService").Heartbeat:Connect(function()
 														local cardvalue1 = script.Parent["Card Placement1"].card1value1
 														local cardvalue2 = script.Parent["Card Placement1"].card1value2
 														cardvalue2.Value = value
-														cardvaluetotal = cardvalue1.Value + cardvalue2.Value
+														cardvaluetotal1 = cardvalue1.Value + cardvalue2.Value
 														if cardvalue1.Value == 1 or cardvalue2.Value == 1 then
-															if cardvaluetotal <= 11 then
-																cardvaluetotal = cardvaluetotal + 10
+															if cardvaluetotal1 <= 11 then
+																cardvaluetotal1 = cardvaluetotal1 + 10
 															end
 														end
-														print(seat, cardvaluetotal)
+														print(seat, cardvaluetotal1)
 														wait(1)
 													end
 													if script.Parent.Chair2.Seat.Occupant then
-														local cardvaluetotal = 0
 														local Card2pos = script.Parent["Card Placement2"]
 														local Card2rot = script.Parent["Card Placement2"].Orientation + Vector3.new(0, 0, -90)
 														local lookVector = Card2pos.CFrame.LookVector
-														local rotation = CFrame.Angles(0, math.rad(-135), 0)
+														local rotation = CFrame.Angles(0, math.rad(45), 0)
 														local rotatedVector = rotation:vectorToWorldSpace(lookVector)
 														local newCard2pos = Card2pos.Position + rotatedVector * 0.2
 														local value, seat = clonePartOnce(game.workspace.Model, newCard2pos, Card2rot, 2)
 														local cardvalue1 = script.Parent["Card Placement2"].card2value1
 														local cardvalue2 = script.Parent["Card Placement2"].card2value2
 														cardvalue2.Value = value
-														cardvaluetotal = cardvalue1.Value + cardvalue2.Value
+														cardvaluetotal2 = cardvalue1.Value + cardvalue2.Value
 														if cardvalue1.Value == 1 or cardvalue2.Value == 1 then
-															if cardvaluetotal <= 11 then
-																cardvaluetotal = cardvaluetotal + 10
+															if cardvaluetotal2 <= 11 then
+																cardvaluetotal2 = cardvaluetotal2 + 10
 															end
 														end
-														print(seat, cardvaluetotal)
+														print(seat, cardvaluetotal2)
 														wait(1)
 													end
 													if script.Parent.Chair3.Seat.Occupant then
-														local cardvaluetotal = 0
 														local Card3pos = script.Parent["Card Placement3"]
 														local Card3rot = script.Parent["Card Placement3"].Orientation + Vector3.new(0, 0, -90)
 														local lookVector = Card3pos.CFrame.LookVector
-														local rotation = CFrame.Angles(0, math.rad(-135), 0)
+														local rotation = CFrame.Angles(0, math.rad(45), 0)
 														local rotatedVector = rotation:vectorToWorldSpace(lookVector)
 														local newCard3pos = Card3pos.Position + rotatedVector * 0.2
 														local value, seat = clonePartOnce(game.workspace.Model, newCard3pos, Card3rot, 3)
 														local cardvalue1 = script.Parent["Card Placement3"].card3value1
 														local cardvalue2 = script.Parent["Card Placement3"].card3value2
 														cardvalue2.Value = value
-														cardvaluetotal = cardvalue1.Value + cardvalue2.Value
+														cardvaluetotal3 = cardvalue1.Value + cardvalue2.Value
 														if cardvalue1.Value == 1 or cardvalue2.Value == 1 then
-															if cardvaluetotal <= 11 then
-																cardvaluetotal = cardvaluetotal + 10
+															if cardvaluetotal3 <= 11 then
+																cardvaluetotal3 = cardvaluetotal3 + 10
 															end
 														end
-														print(seat, cardvaluetotal)
+														print(seat, cardvaluetotal3)
 														wait(1)
 													end
 													if script.Parent.Chair4.Seat.Occupant then
-														local cardvaluetotal = 0
 														local Card4pos = script.Parent["Card Placement4"]
 														local Card4rot = script.Parent["Card Placement4"].Orientation + Vector3.new(0, 0, -90)
 														local lookVector = Card4pos.CFrame.LookVector
-														local rotation = CFrame.Angles(0, math.rad(-135), 0)
+														local rotation = CFrame.Angles(0, math.rad(45), 0)
 														local rotatedVector = rotation:vectorToWorldSpace(lookVector)
 														local newCard4pos = Card4pos.Position + rotatedVector * 0.2
 														local value, seat = clonePartOnce(game.workspace.Model, newCard4pos, Card4rot, 4)
 														local cardvalue1 = script.Parent["Card Placement4"].card4value1
 														local cardvalue2 = script.Parent["Card Placement4"].card4value2
 														cardvalue2.Value = value
-														cardvaluetotal = cardvalue1.Value + cardvalue2.Value
+														cardvaluetotal4 = cardvalue1.Value + cardvalue2.Value
 														if cardvalue1.Value == 1 or cardvalue2.Value == 1 then
-															if cardvaluetotal <= 11 then
-																cardvaluetotal = cardvaluetotal + 10
+															if cardvaluetotal4 <= 11 then
+																cardvaluetotal4 = cardvaluetotal4 + 10
 															end
 														end
-														print(seat, cardvaluetotal)
+														print(seat, cardvaluetotal4)
 														wait(1)
 													end
 													if script.Parent.Chair5.Seat.Occupant then
-														local cardvaluetotal = 0
 														local Card5pos = script.Parent["Card Placement5"]
 														local Card5rot = script.Parent["Card Placement5"].Orientation + Vector3.new(0, 0, -90)
 														local lookVector = Card5pos.CFrame.LookVector
-														local rotation = CFrame.Angles(0, math.rad(-135), 0)
+														local rotation = CFrame.Angles(0, math.rad(45), 0)
 														local rotatedVector = rotation:vectorToWorldSpace(lookVector)
 														local newCard5pos = Card5pos.Position + rotatedVector * 0.2
 														local value, seat = clonePartOnce(game.workspace.Model, newCard5pos, Card5rot, 5)
 														local cardvalue1 = script.Parent["Card Placement5"].card5value1
 														local cardvalue2 = script.Parent["Card Placement5"].card5value2
 														cardvalue2.Value = value
-														cardvaluetotal = cardvalue1.Value + cardvalue2.Value
+														cardvaluetotal5 = cardvalue1.Value + cardvalue2.Value
 														if cardvalue1.Value == 1 or cardvalue2.Value == 1 then
-															if cardvaluetotal <= 11 then
-																cardvaluetotal = cardvaluetotal + 10
+															if cardvaluetotal5 <= 11 then
+																cardvaluetotal5 = cardvaluetotal5 + 10
 															end
 														end
-														print(seat, cardvaluetotal)
+														print(seat, cardvaluetotal5)
 														wait(1)
 													end
 													runonce = false
@@ -458,6 +472,31 @@ game:GetService("RunService").Heartbeat:Connect(function()
 							remoteEvent.Parent = game.ReplicatedStorage
 							remoteEvent.OnServerEvent:Connect(function(player, number)
 								print(player.Name, number)
+								local seat = getSeatByPlayerName(player.Name)
+								if seat and number == 1 then
+									print(player.Name .. " is sitting in seat: " .. seat.Parent.Name)
+									if seat.Parent.Name == "Chair1" then
+										local Card3pos = script.Parent["Card Placement1"]
+										local Card3rot = script.Parent["Card Placement1"].Orientation + Vector3.new(0, 0, -90)
+										local lookVector = Card3pos.CFrame.LookVector
+										local rotation = CFrame.Angles(0, math.rad(-135), 0)
+										local rotatedVector = rotation:vectorToWorldSpace(lookVector)
+										local newCard3pos = Card3pos.Position + rotatedVector * 0.4
+										local value, seat = clonePartOnce(game.workspace.Model, newCard3pos, Card3rot, 1)
+										local cardvalue1 = script.Parent["Card Placement1"].card1value1
+										local cardvalue2 = script.Parent["Card Placement1"].card1value2
+										local cardvalue3 = script.Parent["Card Placement1"].card1value3
+										cardvalue3.Value = value
+										cardvaluetotal1 = cardvalue1.Value + cardvalue2.Value + cardvalue3.Value
+										if cardvalue1.Value == 1 or cardvalue2.Value == 1 or cardvalue3.Value == 1 then
+											if cardvaluetotal1 <= 11 then
+												cardvaluetotal1 = cardvaluetotal1 + 10
+											end
+										end
+										print(seat, cardvaluetotal1)
+										wait(1)
+									end
+								end
 							end)
 						end)()
 					end
